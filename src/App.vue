@@ -14,9 +14,6 @@
       </div>
     </div>
     <router-view></router-view>
-    <div class="content">
-      l am content
-    </div>
   </div>
 </template>
 
@@ -48,6 +45,10 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
 @import "./common/stylus/mixin"
+body{
+  margin:0
+  padding:0
+}
 #app .tab{
   display: flex;
   width: 100%;

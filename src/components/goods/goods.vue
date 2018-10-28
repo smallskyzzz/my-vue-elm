@@ -34,11 +34,13 @@
         </li>
       </ul>
     </div>
+    <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
 <script>
   import BScroll from 'better-scroll'//作者自己写的库
+  import shopcart from '../../components/shopcart/shopcart.vue'
 
   const ERR_OK = 0
 
@@ -75,7 +77,7 @@
         if(response.errno === ERR_OK){
           this.goods = response.data
           this.$nextTick(() => {//在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。
-            //dom真正变化实在这个借口中，一般操作dom都需要卸载此方法中
+            //dom真正变化实在这个借口中，一般操作dom都需要写在此方法中
             this._initScroll()
             this._calculateHeight()
           });
@@ -113,6 +115,12 @@
           this.listHeight.push(height)
         }
       }
+      // components:{//此处若引入会报错 Error in nextTick: "TypeError: Cannot read property '$options' of undefined"
+      //   shopcart//具体原因不清楚
+      // }
+    },
+    components:{
+      shopcart,
     }
   }
 </script>

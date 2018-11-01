@@ -28,6 +28,8 @@
           }else{
             this.food.count ++
           }
+          //this.$dispatch('cart-add', event.target)//派发事件
+          this.$emit('cart-add', event.target)
         },
         decreaseCart(event){
           if(!event._constructed){

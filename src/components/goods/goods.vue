@@ -29,7 +29,7 @@
                   <span class="now">${{food.price}}</span><span class="old" v-show="food.oldPrice">${{food.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <cartcontrol :food="food"></cartcontrol><!--直接在v-for中传递数据，可以借鉴-->
+                  <cartcontrol :food="food" v-on:cart-add="_drop"></cartcontrol><!--直接在v-for中传递数据，可以借鉴-->
                 </div>
               </div>
             </li>
@@ -37,7 +37,7 @@
         </li>
       </ul>
     </div>
-    <shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart><!--最好用delivery-price="seller.deliveryPrice"这种形式-->
+    <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart><!--最好用delivery-price="seller.deliveryPrice"这种形式-->
   </div>
 </template>
 
@@ -98,6 +98,7 @@
           });
         }
       })
+      //this.$on("cart-add", this._drop)
     },
     methods:{
       selectMenu(index,event){
@@ -107,6 +108,11 @@
         let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook')
         let el = foodList[index]
         this.foodsScroll.scrollToElement(el, 300)//滚动到相应位置
+      },
+      _drop(targrt){//events中接受子组件派发的事件，再通过这个方法调用另一个子组件的methods内的方法，amazing
+        this.nextTick(() => {//体验优化，异步执行下的动画
+          this.$refs.shopcart.drop(targrt)
+        })
       },
       _initScroll(){
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {
@@ -139,6 +145,11 @@
       shopcart,
       cartcontrol
     }
+    // events: {//处理子组件派发的事件
+    //   'cart.add'(target){
+    //     this._drop(target)
+    //   }
+    // }
   }
 </script>
 

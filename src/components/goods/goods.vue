@@ -110,7 +110,7 @@
         this.foodsScroll.scrollToElement(el, 300)//滚动到相应位置
       },
       _drop(targrt){//events中接受子组件派发的事件，再通过这个方法调用另一个子组件的methods内的方法，amazing
-        this.nextTick(() => {//体验优化，异步执行下的动画
+        this.$nextTick(() => {//体验优化，异步执行下的动画
           this.$refs.shopcart.drop(targrt)
         })
       },

@@ -14,7 +14,7 @@
         <li v-for="item in goods" class="food-list food-list-hook"><!--加hook表示js选择的-->
           <h1 class="title">{{item.name}}</h1>
           <ul>
-            <li v-for="food in item.foods" class="food-item border-1px">
+            <li @click="selectFood(food,$event)" v-for="food in item.foods" class="food-item border-1px">
               <div class="icon">
                 <img width="57" height="57" :src="food.icon">
               </div>
@@ -38,6 +38,8 @@
       </ul>
     </div>
     <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart><!--最好用delivery-price="seller.deliveryPrice"这种形式-->
+
+    <food :food="selectedFood" ref="food"></food>
   </div>
 </template>
 
@@ -45,6 +47,7 @@
   import BScroll from 'better-scroll'//作者自己写的库
   import shopcart from '../../components/shopcart/shopcart.vue'
   import cartcontrol from '../../components/cartcontrol/cartcontrol.vue'
+  import food from '../../components/food/food'
 
   const ERR_OK = 0
 
@@ -58,7 +61,8 @@
       return{
         goods: [],
         listHeight:[],
-        scrollY: 0
+        scrollY: 0,
+        selectedFood: {}
       }
     },
     computed:{
@@ -109,6 +113,13 @@
         let el = foodList[index]
         this.foodsScroll.scrollToElement(el, 300)//滚动到相应位置
       },
+      selectFood(food,event){
+        if(!event._constructed){//pc端点击事件，即原生点击事件,会组织执行两次事件
+          return
+        }
+        this.selectedFood = food
+        this.$refs.food.show()
+      },
       _drop(targrt){//events中接受子组件派发的事件，再通过这个方法调用另一个子组件的methods内的方法，amazing
         this.$nextTick(() => {//体验优化，异步执行下的动画
           this.$refs.shopcart.drop(targrt)
@@ -143,7 +154,8 @@
     },
     components:{
       shopcart,
-      cartcontrol
+      cartcontrol,
+      food
     }
     // events: {//处理子组件派发的事件
     //   'cart.add'(target){

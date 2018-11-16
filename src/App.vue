@@ -13,27 +13,37 @@
         <router-link :to="{path:'/seller'}" active-class="active">商家</router-link>
       </div>
     </div>
-    <router-view :seller="seller"></router-view>
+    <keep-alive>
+      <router-view :seller="seller"></router-view>
+    </keep-alive>
   </div>
 </template>
 
 <script type="text/javascript">
+  import {urlParse} from "./common/js/util";
   import header from  './components/header/header.vue'
 
   const ERR_OK = 0;//定义一个全局状态码，代表返回数据的质量
   export default {
     data() {
       return {
-        seller: {}
+        seller: {
+          id:(() => {//立即执行函数
+            let queryParam = urlParse()
+            //console.log(queryParam)
+            return queryParam.id
+          })()
+        }
       };
     },
     created() {
-      this.$http.get('api/seller').then((response) => {//箭头函数（箭头前后）前后需要加空格
+      this.$http.get('api/seller?id='+this.seller.id).then((response) => {//箭头函数（箭头前后）前后需要加空格
         response = response.body;
         //console.log(response)
         if(response.errno === ERR_OK){//判断返回状态码是否正确
-          this.seller = response.data;
-          //alert(this.seller);
+          //this.seller = response.data;//这种不会包含id
+          this.seller = Object.assign({},this.seller,response.data)//加入id
+          //alert(this.seller.id);
         }
       });
     },
